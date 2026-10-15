@@ -1,4 +1,4 @@
-name: Build Android APK (EAS Cloud)
+name: Build Android APK (GitHub Artifact)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-android:
-    name: 🤖 بناء ملف APK عبر EAS سحابياً
+    name: 🤖 بناء ملف APK ورفعه كـ Artifact
     runs-on: ubuntu-latest
 
     steps:
@@ -29,5 +29,12 @@ jobs:
       - name: 📦 تثبيت الاعتماديات
         run: npm ci
 
-      - name: 🏗️ بدء البناء السحابي على سيرفرات Expo
-        run: eas build --platform android --profile preview --non-interactive
+      - name: 🏗️ بناء الـ APK وتحميله
+        run: |
+          npx eas-cli build --platform android --profile preview --non-interactive --local --output=app-release.apk
+
+      - name: 📤 رفع ملف الـ APK كـ Artifact مضغوط
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: app-release.apk

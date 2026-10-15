@@ -10,7 +10,7 @@
     "ios": {
       "icon": "./assets/images/shouldIcon.png"
     },
-    "android": {
+    "android": { 
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/shouldIcon.png",
