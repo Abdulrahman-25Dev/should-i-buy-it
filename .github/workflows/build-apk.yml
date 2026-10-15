@@ -1,0 +1,33 @@
+name: Build Android APK (EAS Cloud)
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-android:
+    name: 🤖 بناء ملف APK عبر EAS سحابياً
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 استنسخ المشروع
+        uses: actions/checkout@v4
+
+      - name: 🟢 إعداد Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: 📱 إعداد Expo & EAS CLI
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          packager: npm
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📦 تثبيت الاعتماديات
+        run: npm ci
+
+      - name: 🏗️ بدء البناء السحابي على سيرفرات Expo
+        run: eas build --platform android --profile preview --non-interactive

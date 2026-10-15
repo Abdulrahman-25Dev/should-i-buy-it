@@ -1,23 +1,24 @@
 {
   "expo": {
-    "name": "should-i-buy-it",
+    "name": "تستاهل؟ | Worth It?",
     "slug": "should-i-buy-it",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/shouldIcon.png",
     "scheme": "shouldibuyit",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/images/shouldIcon.png"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/shouldIcon.png",
+        "backgroundImage": "./assets/images/shouldIcon.png",
+        "monochromeImage": "./assets/images/shouldIcon.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.dooom.shouldibuyit"
     },
     "web": {
       "output": "static",
@@ -37,6 +38,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a1ff3afe-062e-4cbe-b5f8-76609d88b1b3"
+      }
     }
   }
 }
