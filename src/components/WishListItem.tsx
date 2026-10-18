@@ -1,9 +1,13 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Trash2, CheckCircle2, Clock } from 'lucide-react-native';
-import { useWishlistStore, WishlistItem as WishlistItemType } from '../store/wishlistStore';
-import { useIncomeStore } from '../store/incomeStore';
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
+import { Trash2, CheckCircle2, Clock } from "lucide-react-native";
+import {
+  useWishlistStore,
+  WishlistItem as WishlistItemType,
+} from "../store/wishlistStore";
+import { useIncomeStore } from "../store/incomeStore";
+import { calculateTrueCost } from "../lib/calculations";
 
 interface WishListItemProps {
   item: WishlistItemType;
@@ -12,7 +16,9 @@ interface WishListItemProps {
 export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
   const router = useRouter();
   const { removeItem, togglePurchased } = useWishlistStore();
-  const { currency } = useIncomeStore();
+  const { currency, hourlyRate } = useIncomeStore();
+  const currentHourlyRate = hourlyRate > 0 ? hourlyRate : 50;
+  const hoursNeeded = calculateTrueCost(item.price, currentHourlyRate).hours;
 
   return (
     <TouchableOpacity
@@ -24,12 +30,14 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
         <View className="flex-row items-center gap-2 mb-1 justify-end">
           {item.isPurchased && (
             <View className="px-2 py-0.5 rounded-md bg-emerald-500/10">
-              <Text className="text-[10px] font-bold text-emerald-500">تم الشراء</Text>
+              <Text className="text-[10px] font-bold text-emerald-500">
+                تم الشراء
+              </Text>
             </View>
           )}
           <Text
             className={`text-base font-bold text-right ${
-              item.isPurchased ? 'line-through text-slate-500' : 'text-white'
+              item.isPurchased ? "line-through text-slate-500" : "text-white"
             }`}
           >
             {item.title}
@@ -45,7 +53,7 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
         <View className="flex-row items-center gap-1 bg-emerald-500/10 px-3 py-1.5 rounded-xl">
           <Clock size={12} color="#10b981" />
           <Text className="text-xs font-black text-emerald-400">
-            ~ {item.hoursNeeded} ساعة
+            ~ {hoursNeeded} ساعة
           </Text>
         </View>
 
@@ -56,7 +64,7 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
           >
             <CheckCircle2
               size={16}
-              color={item.isPurchased ? '#10b981' : '#94a3b8'}
+              color={item.isPurchased ? "#10b981" : "#94a3b8"}
             />
           </TouchableOpacity>
 

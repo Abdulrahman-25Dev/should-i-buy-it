@@ -8,6 +8,7 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: '#10b981', // Emerald active color
         tabBarInactiveTintColor: '#64748b',
+        tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: '#0f172a', // Dark background by default (or translucent)
           borderTopColor: '#1e293b',
@@ -24,6 +25,13 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => <Calculator size={size} color={color} />,
         }}
       />
+        <Tabs.Screen
+          name="stats"
+          options={{
+            title: 'الإحصائيات',
+            tabBarIcon: ({ color, size }) => <History size={size} color={color} />,
+          }}
+        />
       <Tabs.Screen
         name="settings"
         options={{
