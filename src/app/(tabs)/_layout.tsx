@@ -1,17 +1,21 @@
-import { Tabs } from 'expo-router';
-import { Calculator, Settings, History } from 'lucide-react-native';
+import { Tabs } from "expo-router";
+import { Calculator, Settings, History } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
 
 export default function TabsLayout() {
+  const { colorScheme } = useColorScheme();
+  const isDarkMode = colorScheme === "dark";
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#10b981', // Emerald active color
-        tabBarInactiveTintColor: '#64748b',
+        tabBarActiveTintColor: "#10b981",
+        tabBarInactiveTintColor: "#64748b",
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#0f172a', // Dark background by default (or translucent)
-          borderTopColor: '#1e293b',
+          backgroundColor: isDarkMode ? "#0f172a" : "#ffffff",
+          borderTopColor: isDarkMode ? "#1e293b" : "#e2e8f0",
           paddingBottom: 8,
           paddingTop: 8,
           height: 60,
@@ -21,22 +25,28 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'الحاسبة',
-          tabBarIcon: ({ color, size }) => <Calculator size={size} color={color} />,
+          title: "الحاسبة",
+          tabBarIcon: ({ color, size }) => (
+            <Calculator size={size} color={color} />
+          ),
         }}
       />
-        <Tabs.Screen
-          name="stats"
-          options={{
-            title: 'الإحصائيات',
-            tabBarIcon: ({ color, size }) => <History size={size} color={color} />,
-          }}
-        />
+      <Tabs.Screen
+        name="stats"
+        options={{
+          title: "الإحصائيات",
+          tabBarIcon: ({ color, size }) => (
+            <History size={size} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'الإعدادات',
-          tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
+          title: "الإعدادات",
+          tabBarIcon: ({ color, size }) => (
+            <Settings size={size} color={color} />
+          ),
         }}
       />
     </Tabs>

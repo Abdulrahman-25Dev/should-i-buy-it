@@ -24,10 +24,20 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
     <TouchableOpacity
       onPress={() => router.push(`/item/${item.id}`)}
       activeOpacity={0.7}
-      className="p-4 rounded-2xl bg-dark-card border border-dark-border mb-3 flex-row items-center justify-between shadow-sm"
+      className="p-4 rounded-2xl bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border mb-3 flex-row-reverse items-center justify-between shadow-sm"
     >
-      <View className="flex-1 pr-3">
-        <View className="flex-row items-center gap-2 mb-1 justify-end">
+      {/* جهة العنوان والسعر (اليمين) */}
+      <View className="flex-1 pl-3">
+        <View className="flex-row-reverse items-center gap-2 mb-1 justify-start">
+          <Text
+            className={`text-base font-bold text-right ${
+              item.isPurchased
+                ? "line-through text-slate-500"
+                : "text-light-text dark:text-dark-text"
+            }`}
+          >
+            {item.title}
+          </Text>
           {item.isPurchased && (
             <View className="px-2 py-0.5 rounded-md bg-emerald-500/10">
               <Text className="text-[10px] font-bold text-emerald-500">
@@ -35,20 +45,14 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
               </Text>
             </View>
           )}
-          <Text
-            className={`text-base font-bold text-right ${
-              item.isPurchased ? "line-through text-slate-500" : "text-white"
-            }`}
-          >
-            {item.title}
-          </Text>
         </View>
 
-        <Text className="text-xs font-semibold text-slate-400 text-right">
+        <Text className="text-xs font-semibold text-light-muted dark:text-dark-muted text-right">
           {item.price} {currency}
         </Text>
       </View>
 
+      {/* جهة الساعات والأزرار (اليسار) */}
       <View className="items-end gap-2">
         <View className="flex-row items-center gap-1 bg-emerald-500/10 px-3 py-1.5 rounded-xl">
           <Clock size={12} color="#10b981" />
@@ -58,9 +62,14 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
         </View>
 
         <View className="flex-row items-center gap-2">
+          {/* زر الشراء */}
           <TouchableOpacity
-            onPress={() => togglePurchased(item.id)}
-            className="p-1.5 rounded-lg bg-slate-800"
+            onPress={(e) => {
+              e.stopPropagation(); // منع الانتقال لصفحة التفاصيل عند الضغط على الزر
+              togglePurchased(item.id);
+            }}
+            activeOpacity={0.7}
+            className="p-2 rounded-xl bg-light-input dark:bg-dark-input border border-light-border dark:border-dark-border"
           >
             <CheckCircle2
               size={16}
@@ -68,9 +77,14 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
             />
           </TouchableOpacity>
 
+          {/* زر الحذف */}
           <TouchableOpacity
-            onPress={() => removeItem(item.id)}
-            className="p-1.5 rounded-lg bg-rose-500/20"
+            onPress={(e) => {
+              e.stopPropagation(); // منع الانتقال لصفحة التفاصيل عند الضغط على الزر
+              removeItem(item.id);
+            }}
+            activeOpacity={0.7}
+            className="p-2 rounded-xl bg-rose-500/10 border border-rose-500/20"
           >
             <Trash2 size={16} color="#f43f5e" />
           </TouchableOpacity>
