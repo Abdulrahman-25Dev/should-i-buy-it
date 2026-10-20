@@ -9,6 +9,7 @@ import {
   Moon,
   Trash2,
   ChevronLeft,
+  ChevronRight,
   Coins,
   Languages,
 } from "lucide-react-native";
@@ -60,6 +61,8 @@ export default function SettingsScreen() {
     ]);
   };
 
+  const isArabic = language === "ar"; // Assuming you have a translation key for the current language
+
   return (
     <SafeAreaView
       className="flex-1 bg-light-bg dark:bg-dark-bg"
@@ -71,10 +74,14 @@ export default function SettingsScreen() {
       >
         {/* Header Section */}
         <View className="pt-4 pb-6 border-b border-light-border dark:border-dark-border mb-6">
-          <Text className="text-2xl font-black text-light-text dark:text-dark-text text-right">
+          <Text
+            className={`text-2xl font-black text-light-text dark:text-dark-text ${isArabic ? "text-right" : "text-left"}`}
+          >
             {t("settings.title")}
           </Text>
-          <Text className="text-xs font-semibold text-light-muted dark:text-dark-muted text-right mt-1">
+          <Text
+            className={`text-xs font-semibold text-light-muted dark:text-dark-muted ${isArabic ? "text-right" : "text-left"} mt-1`}
+          >
             {t("settings.subtitle")}
           </Text>
         </View>
@@ -93,17 +100,32 @@ export default function SettingsScreen() {
         </View>
 
         {/* Section 1: App Preferences */}
-        <Text className="text-sm font-bold text-light-muted dark:text-dark-muted mb-3 text-right">
+        <Text
+          className={`text-sm font-bold text-light-muted dark:text-dark-muted mb-3 ${isArabic ? "text-right" : "text-left"}`}
+        >
           {t("settings.preferences")}
         </Text>
 
         <View className="p-4 rounded-2xl bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border mb-6 gap-4">
           <View className="pb-3 border-b border-light-border dark:border-dark-border">
-            <View className="flex-row items-center justify-end gap-2 mb-3">
-              <Text className="text-sm font-bold text-light-text dark:text-dark-text">
-                {t("settings.theme")}
-              </Text>
-              <Moon size={18} color="#f59e0b" />
+            <View
+              className={`flex-row items-center gap-2 mb-3 ${isArabic ? "justify-end" : "justify-start"}`}
+            >
+              {isArabic ? (
+                <>
+                  <Moon size={18} color="#f59e0b" />
+                  <Text className="text-sm font-bold text-light-text dark:text-dark-text">
+                    {t("settings.theme")}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text className="text-sm font-bold text-light-text dark:text-dark-text">
+                    {t("settings.theme")}
+                  </Text>
+                  <Moon size={18} color="#f59e0b" />
+                </>
+              )}
             </View>
             <View className="flex-row gap-2">
               {(
@@ -135,13 +157,34 @@ export default function SettingsScreen() {
           </View>
 
           {/* Language Selection */}
-          <View className="flex-row items-center justify-between pt-1">
+          <View className="border-t border-light-border pt-4 dark:border-dark-border">
+            <View
+              className={`mb-3 flex-row items-center gap-2 ${isArabic ? "justify-end" : "justify-start"}`}
+            >
+              {isArabic ? (
+                <>
+                  <Languages size={18} color="#3b82f6" />
+                  <Text className="text-sm font-bold text-light-text dark:text-dark-text">
+                    {t("settings.language")}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text className="text-sm font-bold text-light-text dark:text-dark-text">
+                    {t("settings.language")}
+                  </Text>
+                  <Languages size={18} color="#3b82f6" />
+                </>
+              )}
+            </View>
             <View className="flex-row gap-2">
               {["ar", "en"].map((lang) => (
                 <TouchableOpacity
                   key={lang}
                   onPress={() => setLanguage(lang as AppLanguage)}
-                  className={`px-3 py-1.5 rounded-lg border ${
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: language === lang }}
+                  className={`min-h-11 flex-1 items-center justify-center rounded-lg border px-3 py-2 ${
                     language === lang
                       ? "bg-emerald-600 border-emerald-500"
                       : "bg-light-input dark:bg-dark-input border-light-border dark:border-dark-border"
@@ -159,17 +202,13 @@ export default function SettingsScreen() {
                 </TouchableOpacity>
               ))}
             </View>
-            <View className="flex-row items-center gap-2">
-              <Text className="text-sm font-bold text-light-text dark:text-dark-text">
-                {t("settings.language")}
-              </Text>
-              <Languages size={18} color="#3b82f6" />
-            </View>
           </View>
         </View>
 
         {/* Section 1: Financial Profile Cards (Prepped for BottomSheet) */}
-        <Text className="text-sm font-bold text-light-muted dark:text-dark-muted mb-3 text-right">
+        <Text
+          className={`text-sm font-bold text-light-muted dark:text-dark-muted mb-3 ${isArabic ? "text-right" : "text-left"}`}
+        >
           {t("settings.financialProfile")}
         </Text>
 
@@ -180,10 +219,16 @@ export default function SettingsScreen() {
             onPress={() =>
               showAlert(t("common.alert"), t("settings.bottomSheetNotice"))
             }
-            className="p-4 flex-row items-center justify-between border-b border-light-border dark:border-dark-border"
+            className={` ${isArabic ? "flex-row" : "flex-row-reverse"} p-4 items-center justify-between border-b border-light-border dark:border-dark-border`}
           >
-            <ChevronLeft size={18} color="#64748b" />
-            <View className="items-end flex-1 pr-3">
+            {isArabic ? (
+              <ChevronLeft size={18} color="#64748b" />
+            ) : (
+              <ChevronRight size={18} color="#64748b" className="rotate-180" />
+            )}
+            <View
+              className={` ${isArabic ? "items-end" : "items-start"} flex-1 px-3`}
+            >
               <Text className="text-sm font-bold text-light-text dark:text-dark-text">
                 {t("settings.monthlyIncome")}
               </Text>
@@ -202,10 +247,16 @@ export default function SettingsScreen() {
             onPress={() =>
               showAlert(t("common.alert"), t("settings.bottomSheetNotice"))
             }
-            className="p-4 flex-row items-center justify-between border-b border-light-border dark:border-dark-border"
+            className={` ${isArabic ? "flex-row" : "flex-row-reverse"} p-4 items-center justify-between border-b border-light-border dark:border-dark-border`}
           >
-            <ChevronLeft size={18} color="#64748b" />
-            <View className="items-end flex-1 pr-3">
+            {isArabic ? (
+              <ChevronLeft size={18} color="#64748b" />
+            ) : (
+              <ChevronRight size={18} color="#64748b" />
+            )}
+            <View
+              className={` ${isArabic ? "items-end" : "items-start"} flex-1 px-3`}
+            >
               <Text className="text-sm font-bold text-light-text dark:text-dark-text">
                 {t("settings.dailyHours")}
               </Text>
@@ -224,10 +275,16 @@ export default function SettingsScreen() {
             onPress={() =>
               showAlert(t("common.alert"), t("settings.bottomSheetNotice"))
             }
-            className="p-4 flex-row items-center justify-between border-b border-light-border dark:border-dark-border"
+            className={` ${isArabic ? "flex-row" : "flex-row-reverse"} p-4 items-center justify-between border-b border-light-border dark:border-dark-border`}
           >
-            <ChevronLeft size={18} color="#64748b" />
-            <View className="items-end flex-1 pr-3">
+            {isArabic ? (
+              <ChevronLeft size={18} color="#64748b" />
+            ) : (
+              <ChevronRight size={18} color="#64748b" />
+            )}
+            <View
+              className={` ${isArabic ? "items-end" : "items-start"} flex-1 px-3`}
+            >
               <Text className="text-sm font-bold text-light-text dark:text-dark-text">
                 {t("settings.weeklyDays")}
               </Text>
@@ -246,10 +303,16 @@ export default function SettingsScreen() {
             onPress={() =>
               showAlert(t("common.alert"), t("settings.bottomSheetNotice"))
             }
-            className="p-4 flex-row items-center justify-between"
+            className={` ${isArabic ? "flex-row" : "flex-row-reverse"} p-4 items-center justify-between`}
           >
-            <ChevronLeft size={18} color="#64748b" />
-            <View className="items-end flex-1 pr-3">
+            {isArabic ? (
+              <ChevronLeft size={18} color="#64748b" />
+            ) : (
+              <ChevronRight size={18} color="#64748b" />
+            )}
+            <View
+              className={` ${isArabic ? "items-end" : "items-start"} flex-1 px-3`}
+            >
               <Text className="text-sm font-bold text-light-text dark:text-dark-text">
                 {t("settings.currency")}
               </Text>
