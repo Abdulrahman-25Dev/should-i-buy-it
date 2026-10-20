@@ -6,6 +6,7 @@ import { useColorScheme } from "nativewind";
 import { CustomAlertProvider } from "../components/CustomAlert";
 import i18n from "../i18next/i18n";
 import { useSettingsStore } from "../store/settingsStore";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   const theme = useSettingsStore((state) => state.theme);
@@ -23,11 +24,13 @@ export default function RootLayout() {
   }, [language]);
 
   return (
-    <CustomAlertProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="item/[id]" options={{ presentation: "modal" }} />
-      </Stack>
-    </CustomAlertProvider>
+    <SafeAreaProvider>
+      <CustomAlertProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="item/[id]" options={{ presentation: "modal" }} />
+        </Stack>
+      </CustomAlertProvider>
+    </SafeAreaProvider>
   );
 }

@@ -20,6 +20,7 @@ import { EmptyState } from "../../components/EmptyState";
 import { WishListItem } from "../../components/WishListItem";
 import { useWishlistStore } from "../../store/wishlistStore";
 import { useTranslation } from "react-i18next";
+import i18n from "@/i18next/i18n";
 
 type WishlistFilter = "all" | "thinking" | "purchased";
 
@@ -46,6 +47,8 @@ export default function WishlistScreen() {
     return true;
   });
 
+  const isArabic = i18n.language === "ar"; // Assuming you have a translation key for the current language
+
   return (
     <SafeAreaView
       className="flex-1 bg-light-bg dark:bg-dark-bg"
@@ -58,8 +61,8 @@ export default function WishlistScreen() {
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="mb-6 flex-row-reverse items-center justify-between border-b border-light-border pb-5 pt-4 dark:border-dark-border">
-          <View className="flex-1 items-end">
+        <View className={`mb-6 ${isArabic ? "flex-row-reverse" : "flex-row"} items-center justify-between border-b border-light-border pb-5 pt-4 dark:border-dark-border`}>
+          <View className={`flex-1 ${isArabic ? "items-end" : "items-start"}`}>
             <Text className="text-xl font-black text-light-text dark:text-dark-text">
               {t("wishlist.title")}
             </Text>
@@ -74,10 +77,17 @@ export default function WishlistScreen() {
             accessibilityLabel={t("common.back")}
             className="ml-3 h-10 w-10 items-center justify-center rounded-xl border border-light-border bg-light-card dark:border-dark-border dark:bg-dark-card"
           >
-            <ArrowLeft
-              size={19}
-              color={colorScheme === "dark" ? "#f8fafc" : "#0f172a"}
-            />
+            {isArabic ? (
+              <ArrowLeft
+                size={19}
+                color={colorScheme === "dark" ? "#f8fafc" : "#0f172a"}
+              />
+            ) : (
+              <ArrowRight
+                size={19}
+                color={colorScheme === "dark" ? "#f8fafc" : "#0f172a"}
+              />
+            )}
           </TouchableOpacity>
         </View>
 

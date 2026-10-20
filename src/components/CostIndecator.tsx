@@ -1,6 +1,7 @@
 import { AlertTriangle, CircleCheck, TrendingUp } from "lucide-react-native";
 import { Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
+import i18n from "@/i18next/i18n";
 
 interface CostIndecatorProps {
   hours: number;
@@ -37,13 +38,15 @@ export function CostIndecator({ hours }: CostIndecatorProps) {
   }[level];
   const { Icon } = content;
 
+  const isArabic = i18n.language === "ar";
+
   return (
     <View
       accessibilityRole="summary"
-      className={`flex-row-reverse items-center gap-3 rounded-2xl border px-4 py-3 ${content.container}`}
+      className={`${isArabic ? "flex-row-reverse" : "flex-row"} items-center gap-3 rounded-2xl border px-4 py-3 ${content.container}`}
     >
       <Icon size={20} color={content.color} />
-      <View className="flex-1 items-end">
+      <View className={`flex-1 ${isArabic ? "items-end" : "items-start"}`}>
         <Text className={`text-sm font-extrabold ${content.text}`}>
           {content.label}
         </Text>

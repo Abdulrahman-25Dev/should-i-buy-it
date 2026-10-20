@@ -109,9 +109,13 @@ export function CalculatorCard() {
         <>
           <CostIndecator hours={calculation.hours} />
           <View className="mt-4 flex-row gap-3">
-            <Button onPress={saveToWishlist} className="flex-1 px-3">
+            <Button
+              onPress={saveToWishlist}
+              className="flex-1 px-3"
+              contentClassName="flex-col"
+            >
               <CheckCircle2 size={18} color="#ffffff" />
-              <Text className="text-sm font-bold text-white">
+              <Text className="text-center text-sm font-bold text-white">
                 {t("calculator.worthIt")}
               </Text>
             </Button>
@@ -119,9 +123,10 @@ export function CalculatorCard() {
               onPress={keepMoney}
               variant="danger"
               className="flex-1 px-3"
+              contentClassName="flex-col"
             >
               <XCircle size={18} color="#ffffff" />
-              <Text className="text-sm font-bold text-white">
+              <Text className="text-center text-sm font-bold text-white">
                 {t("calculator.saveMoney")}
               </Text>
             </Button>

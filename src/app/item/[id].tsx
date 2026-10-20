@@ -22,6 +22,7 @@ import { calculateTrueCost } from "../../lib/calculations";
 import { useIncomeStore } from "../../store/incomeStore";
 import { useWishlistStore } from "../../store/wishlistStore";
 import { useTranslation } from "react-i18next";
+import i18n from "@/i18next/i18n";
 
 const THINKING_PERIOD_MS = 24 * 60 * 60 * 1000;
 
@@ -61,26 +62,28 @@ export default function ItemDetailsScreen() {
       setRemainingTime(Math.max(0, thinkingUntil - Date.now()));
     };
 
+    
     updateRemainingTime();
     const interval = setInterval(updateRemainingTime, 1000);
     return () => clearInterval(interval);
   }, [thinkingUntil]);
-
+  
   const currentHourlyRate = hourlyRate > 0 ? hourlyRate : 50;
   const calculation = calculateTrueCost(item?.price ?? 0, currentHourlyRate);
-
+  
   const handlePurchase = () => {
     if (!item) return;
     if (!item.isPurchased) togglePurchased(item.id);
     router.back();
   };
-
+  
   const handleSaveMoney = () => {
     if (!item) return;
     setSaved(item.id, true);
     router.back();
   };
-
+  
+  const isArabic = i18n.language === "ar"; // Assuming you have a translation key for the current language
   return (
     <SafeAreaView
       className="flex-1 bg-light-bg dark:bg-dark-bg"
@@ -170,8 +173,8 @@ export default function ItemDetailsScreen() {
                 <View className="h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10">
                   <Clock3 size={19} color="#2563eb" />
                 </View>
-                <View className="flex-1 items-end">
-                  <Text className="text-sm font-bold text-light-text dark:text-dark-text">
+                <View className={`flex-1 ${isArabic ? "items-end" : "items-start"}`}>
+                  <Text className="text-sm font-bold text-light-text dark:text-dark-text"> 
                     {thinkingUntil === null
                       ? t("item.startThinking")
                       : remainingTime > 0
