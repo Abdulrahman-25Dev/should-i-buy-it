@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-  Switch,
-} from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Switch } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useColorScheme } from "nativewind";
 import {
@@ -20,8 +13,10 @@ import {
   Languages,
 } from "lucide-react-native";
 import { useIncomeStore } from "../../store/incomeStore";
+import { useCustomAlert } from "../../components/CustomAlert";
 
 export default function SettingsScreen() {
+  const { showAlert } = useCustomAlert();
   const {
     monthlyIncome,
     workHoursPerDay,
@@ -44,7 +39,7 @@ export default function SettingsScreen() {
   };
 
   const handleResetData = () => {
-    Alert.alert(
+    showAlert(
       "تصفير البيانات",
       "هل أنت متأكد من مسح كافة الإعدادات والبيانات المحلية؟",
       [
@@ -54,7 +49,7 @@ export default function SettingsScreen() {
           style: "destructive",
           onPress: () => {
             setMonthlyIncome(0);
-            Alert.alert("تم", "تمت استعادة الإعدادات الافتراضية.");
+            showAlert("تم", "تمت استعادة الإعدادات الافتراضية.");
           },
         },
       ],
@@ -98,7 +93,7 @@ export default function SettingsScreen() {
           تفضيلات التطبيق
         </Text>
 
-        <View className="p-4 rounded-2xl bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border mb-6 space-y-4">
+        <View className="p-4 rounded-2xl bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border mb-6 gap-4">
           {/* Dark Mode Toggle */}
           <View className="flex-row items-center justify-between pb-3 border-b border-light-border dark:border-dark-border">
             <Switch
@@ -161,7 +156,7 @@ export default function SettingsScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() =>
-              Alert.alert(
+              showAlert(
                 "تنبيه",
                 "سيتم تفعيل تعديل القيم عبر الـ BottomSheet قريباً.",
               )
@@ -186,7 +181,7 @@ export default function SettingsScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() =>
-              Alert.alert(
+              showAlert(
                 "تنبيه",
                 "سيتم تفعيل تعديل القيم عبر الـ BottomSheet قريباً.",
               )
@@ -211,7 +206,7 @@ export default function SettingsScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() =>
-              Alert.alert(
+              showAlert(
                 "تنبيه",
                 "سيتم تفعيل تعديل القيم عبر الـ BottomSheet قريباً.",
               )
@@ -236,7 +231,7 @@ export default function SettingsScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() =>
-              Alert.alert(
+              showAlert(
                 "تنبيه",
                 "سيتم تفعيل تعديل القيم عبر الـ BottomSheet قريباً.",
               )

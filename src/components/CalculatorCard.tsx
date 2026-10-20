@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { BookmarkPlus, CheckCircle2, XCircle } from "lucide-react-native";
 import { calculateTrueCost } from "../lib/calculations";
 import { useIncomeStore } from "../store/incomeStore";
@@ -9,12 +9,14 @@ import { TimeBreakdown } from "./TimeBreakdown";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
 import { Input } from "./ui/Input";
+import { useCustomAlert } from "./CustomAlert";
 
 function formatNumber(value: number) {
   return value.toLocaleString("en-US", { maximumFractionDigits: 1 });
 }
 
 export function CalculatorCard() {
+  const { showAlert } = useCustomAlert();
   const { currency, hourlyRate, monthlyIncome, workHoursPerDay } =
     useIncomeStore();
   const addItem = useWishlistStore((state) => state.addItem);
@@ -32,7 +34,7 @@ export function CalculatorCard() {
     addItem(itemTitle.trim() || "منتج جديد", safePrice, currentHourlyRate);
     setItemTitle("");
     setPriceInput("");
-    Alert.alert("تمت الإضافة", "أضفنا المنتج إلى قائمة التفكير.");
+    showAlert("تمت الإضافة", "أضفنا المنتج إلى قائمة التفكير.");
   };
 
   const keepMoney = () => {
@@ -46,7 +48,7 @@ export function CalculatorCard() {
     );
     setItemTitle("");
     setPriceInput("");
-    Alert.alert("قرار ذكي", "تم تسجيل المبلغ وساعات العمل التي وفرتها.");
+    showAlert("قرار ذكي", "تم تسجيل المبلغ وساعات العمل التي وفرتها.");
   };
 
   return (
