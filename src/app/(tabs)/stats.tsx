@@ -14,7 +14,7 @@ export default function StatsScreen() {
   const { items } = useWishlistStore();
   const { currency, hourlyRate } = useIncomeStore();
   const currentHourlyRate = hourlyRate > 0 ? hourlyRate : 50;
-  const savedItems = items.filter((item) => !item.isPurchased);
+  const savedItems = items.filter((item) => item.isSaved && !item.isPurchased);
   const savedAmount = savedItems.reduce((total, item) => total + item.price, 0);
   const protectedHours = savedItems.reduce(
     (total, item) =>
