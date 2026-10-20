@@ -1,32 +1,34 @@
 import { AlertTriangle, CircleCheck, TrendingUp } from "lucide-react-native";
 import { Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface CostIndecatorProps {
   hours: number;
 }
 
 export function CostIndecator({ hours }: CostIndecatorProps) {
+  const { t } = useTranslation();
   const level = hours >= 16 ? "high" : hours >= 8 ? "medium" : "low";
   const content = {
     high: {
-      label: "تكلفة عالية",
-      detail: "تحتاج أكثر من يومي عمل",
+      label: t("cost.high"),
+      detail: t("cost.highDetail"),
       color: "#e11d48",
       container: "border-rose-500/20 bg-rose-500/10",
       text: "text-rose-700 dark:text-rose-300",
       Icon: AlertTriangle,
     },
     medium: {
-      label: "تكلفة متوسطة",
-      detail: "تحتاج قرابة يوم عمل",
+      label: t("cost.medium"),
+      detail: t("cost.mediumDetail"),
       color: "#d97706",
       container: "border-amber-500/20 bg-amber-500/10",
       text: "text-amber-700 dark:text-amber-300",
       Icon: TrendingUp,
     },
     low: {
-      label: "تكلفة بسيطة",
-      detail: "تأثيرها محدود على وقتك",
+      label: t("cost.low"),
+      detail: t("cost.lowDetail"),
       color: "#059669",
       container: "border-emerald-500/20 bg-emerald-500/10",
       text: "text-emerald-700 dark:text-emerald-300",

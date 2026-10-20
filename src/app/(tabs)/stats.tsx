@@ -5,12 +5,14 @@ import { Award, Clock, TrendingUp } from "lucide-react-native";
 import { useIncomeStore } from "../../store/incomeStore";
 import { useWishlistStore } from "../../store/wishlistStore";
 import { calculateTrueCost } from "../../lib/calculations";
+import { useTranslation } from "react-i18next";
 
 function formatNumber(value: number, maximumFractionDigits = 0) {
   return value.toLocaleString("en-US", { maximumFractionDigits });
 }
 
 export default function StatsScreen() {
+  const { t } = useTranslation();
   const { items } = useWishlistStore();
   const { currency, hourlyRate } = useIncomeStore();
   const currentHourlyRate = hourlyRate > 0 ? hourlyRate : 50;
@@ -35,10 +37,10 @@ export default function StatsScreen() {
       >
         <View className="pt-4 pb-6 border-b border-light-border dark:border-dark-border mb-6">
           <Text className="text-2xl font-black text-light-text dark:text-dark-text text-right">
-            إحصائيات التوفير
+            {t("stats.title")}
           </Text>
           <Text className="text-xs font-semibold text-light-muted dark:text-dark-muted text-right mt-1">
-            ملخص الأموال وساعات العمل التي نجحت في حمايتها
+            {t("stats.subtitle")}
           </Text>
         </View>
 
@@ -47,7 +49,7 @@ export default function StatsScreen() {
             <View className="flex-row-reverse items-center justify-between">
               <TrendingUp size={20} color="#10b981" />
               <Text className="flex-1 text-[11px] font-bold text-light-muted dark:text-dark-muted text-right mr-2">
-                الأموال الموفرة
+                {t("stats.savedMoney")}
               </Text>
             </View>
             <View>
@@ -68,7 +70,7 @@ export default function StatsScreen() {
             <View className="flex-row-reverse items-center justify-between">
               <Clock size={20} color="#3b82f6" />
               <Text className="flex-1 text-[11px] font-bold text-light-muted dark:text-dark-muted text-right mr-2">
-                ساعات العمل المحمية
+                {t("stats.protectedHours")}
               </Text>
             </View>
             <View>
@@ -80,7 +82,7 @@ export default function StatsScreen() {
                 {formatNumber(protectedHours, 1)}
               </Text>
               <Text className="text-xs font-semibold text-slate-500 dark:text-slate-400 text-right mt-1">
-                ساعة عمل
+                {t("stats.workHour")}
               </Text>
             </View>
           </View>
@@ -93,10 +95,10 @@ export default function StatsScreen() {
             </View>
             <View className="flex-1">
               <Text className="text-sm font-bold text-light-text dark:text-dark-text text-right">
-                مؤشر الوعي المالي
+                {t("stats.awareness")}
               </Text>
               <Text className="text-xs text-light-muted dark:text-dark-muted text-right mt-1">
-                نسبة المنتجات التي تم توفيرها من قائمتك
+                {t("stats.awarenessDetail")}
               </Text>
             </View>
           </View>
@@ -107,11 +109,11 @@ export default function StatsScreen() {
 
         <View className="flex-row-reverse items-center justify-between mb-3">
           <Text className="text-sm font-bold text-slate-700 dark:text-slate-300 text-right">
-            أبرز المنتجات التي وفرت قيمتها
+            {t("stats.topSaved")}
           </Text>
           {savedItems.length > 0 && (
             <Text className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-              {savedItems.length} منتجات
+              {t("stats.savedProductsCount", { count: savedItems.length })}
             </Text>
           )}
         </View>
@@ -122,8 +124,7 @@ export default function StatsScreen() {
               <TrendingUp size={22} color="#10b981" />
             </View>
             <Text className="text-sm leading-6 font-semibold text-light-muted dark:text-dark-muted text-center">
-              لم تقم بتوفير أي منتج حتى الآن، اتخذ قرارك الذكي القادم من الشاشة
-              الرئيسية!
+              {t("stats.empty")}
             </Text>
           </View>
         ) : (
@@ -157,7 +158,7 @@ export default function StatsScreen() {
                   <View className="flex-row items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500/10">
                     <Clock size={14} color="#10b981" />
                     <Text className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                      {formatNumber(hours, 1)} ساعة
+                      {t("stats.hours", { value: formatNumber(hours, 1) })}
                     </Text>
                   </View>
                 </View>

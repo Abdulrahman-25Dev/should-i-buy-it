@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useColorScheme } from "nativewind";
+import { useTranslation } from "react-i18next";
 import { Settings } from "lucide-react-native";
 import { useIncomeStore } from "../../store/incomeStore";
 import { useWishlistStore } from "../../store/wishlistStore";
@@ -19,6 +20,7 @@ import { Button } from "../../components/ui/Button";
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { colorScheme } = useColorScheme();
 
   const { hourlyRate, currency } = useIncomeStore();
@@ -42,10 +44,10 @@ export default function HomeScreen() {
         <View className="flex-row-reverse items-center justify-between pt-4 pb-6 border-b border-light-border dark:border-dark-border mb-6">
           <View className="flex-1">
             <Text className="text-xl font-black text-light-text dark:text-dark-text text-right">
-              تستاهل؟
+              {t("home.appName")}
             </Text>
             <Text className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 text-right mt-0.5">
-              أجرك: {currentHourlyRate} {currency} / ساعة
+              {t("home.hourlyRate", { rate: currentHourlyRate, currency })}
             </Text>
           </View>
 
@@ -63,7 +65,7 @@ export default function HomeScreen() {
         {/* Wishlist Header Section */}
         <View className="flex-row-reverse items-center justify-between mb-4">
           <Text className="text-base font-bold text-light-text dark:text-dark-text">
-            آخر ما فكرت بشرائه
+            {t("home.recentItems")}
           </Text>
 
           <Button
@@ -71,13 +73,13 @@ export default function HomeScreen() {
             onPress={() => router.push("/wishlist")}
             className="min-h-0 rounded-lg px-3 py-1.5"
           >
-            عرض الكل
+            {t("home.viewAll")}
           </Button>
         </View>
 
         {/* Wishlist Items List */}
         {items.length === 0 ? (
-          <EmptyState message="أضف منتجاً لتعرف كم ساعة من وقتك تساوي قيمته." />
+          <EmptyState message={t("home.emptyMessage")} />
         ) : (
           items
             .slice(0, 3)

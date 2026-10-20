@@ -10,12 +10,14 @@ import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
 import { Input } from "./ui/Input";
 import { useCustomAlert } from "./CustomAlert";
+import { useTranslation } from "react-i18next";
 
 function formatNumber(value: number) {
   return value.toLocaleString("en-US", { maximumFractionDigits: 1 });
 }
 
 export function CalculatorCard() {
+  const { t } = useTranslation();
   const { showAlert } = useCustomAlert();
   const { currency, hourlyRate, monthlyIncome, workHoursPerDay } =
     useIncomeStore();
@@ -31,58 +33,62 @@ export function CalculatorCard() {
   const saveToWishlist = () => {
     if (safePrice <= 0) return;
 
-    addItem(itemTitle.trim() || "منتج جديد", safePrice, currentHourlyRate);
+    addItem(
+      itemTitle.trim() || t("calculator.newProduct"),
+      safePrice,
+      currentHourlyRate,
+    );
     setItemTitle("");
     setPriceInput("");
-    showAlert("تمت الإضافة", "أضفنا المنتج إلى قائمة التفكير.");
+    showAlert(t("calculator.addedTitle"), t("calculator.addedMessage"));
   };
 
   const keepMoney = () => {
     if (safePrice <= 0) return;
 
     addItem(
-      itemTitle.trim() || "منتج جديد",
+      itemTitle.trim() || t("calculator.newProduct"),
       safePrice,
       currentHourlyRate,
       true,
     );
     setItemTitle("");
     setPriceInput("");
-    showAlert("قرار ذكي", "تم تسجيل المبلغ وساعات العمل التي وفرتها.");
+    showAlert(t("calculator.savedTitle"), t("calculator.savedMessage"));
   };
 
   return (
     <Card corner="3xl" className="mb-6 overflow-hidden p-5 shadow-sm">
       <Input
-        label="اسم المنتج"
+        label={t("calculator.productName")}
         value={itemTitle}
         onChangeText={setItemTitle}
-        placeholder="مثلاً: سماعات جديدة"
+        placeholder={t("calculator.productPlaceholder")}
         returnKeyType="next"
         containerClassName="mb-5"
       />
 
       <Input
-        label={`سعر المنتج (${currency})`}
+        label={t("calculator.productPrice", { currency })}
         value={priceInput}
         onChangeText={setPriceInput}
         placeholder="0.00"
         keyboardType="decimal-pad"
         returnKeyType="done"
-        accessibilityLabel="سعر المنتج"
+        accessibilityLabel={t("calculator.priceAccessibility")}
         className="text-2xl font-black"
       />
 
       <View className="my-4 items-center border-y border-light-border py-5 dark:border-dark-border">
         <Text className="mb-1 text-xs font-semibold text-light-muted dark:text-dark-muted">
-          ثمنه من وقتك
+          {t("calculator.timeCost")}
         </Text>
         <View className="items-center gap-1">
           <Text className="text-5xl font-black text-light-text dark:text-dark-text">
             {formatNumber(calculation.hours)}
           </Text>
           <Text className="text-sm font-bold text-light-muted dark:text-dark-muted">
-            ساعة عمل
+            {t("calculator.workHour")}
           </Text>
         </View>
 
@@ -105,7 +111,9 @@ export function CalculatorCard() {
           <View className="mt-4 flex-row gap-3">
             <Button onPress={saveToWishlist} className="flex-1 px-3">
               <CheckCircle2 size={18} color="#ffffff" />
-              <Text className="text-sm font-bold text-white">تستاهل!</Text>
+              <Text className="text-sm font-bold text-white">
+                {t("calculator.worthIt")}
+              </Text>
             </Button>
             <Button
               onPress={keepMoney}
@@ -113,7 +121,9 @@ export function CalculatorCard() {
               className="flex-1 px-3"
             >
               <XCircle size={18} color="#ffffff" />
-              <Text className="text-sm font-bold text-white">وفر فلوسك!</Text>
+              <Text className="text-sm font-bold text-white">
+                {t("calculator.saveMoney")}
+              </Text>
             </Button>
           </View>
           <TouchableOpacity
@@ -124,7 +134,7 @@ export function CalculatorCard() {
           >
             <BookmarkPlus size={16} color="#64748b" />
             <Text className="text-xs font-semibold text-light-muted dark:text-dark-muted">
-              أضف لقائمة التفكير لاحقاً
+              {t("calculator.saveForLater")}
             </Text>
           </TouchableOpacity>
         </>

@@ -7,6 +7,7 @@ import {
   type GestureResponderEvent,
 } from "react-native";
 import { useColorScheme } from "nativewind";
+import { useTranslation } from "react-i18next";
 
 export interface CustomAlertButton {
   text: string;
@@ -31,6 +32,7 @@ interface CustomAlertContextValue {
 const CustomAlertContext = createContext<CustomAlertContextValue | null>(null);
 
 export function CustomAlertProvider({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
   const [alert, setAlert] = useState<AlertState | null>(null);
   const { colorScheme } = useColorScheme();
   const isDarkMode = colorScheme === "dark";
@@ -38,7 +40,7 @@ export function CustomAlertProvider({ children }: { children: ReactNode }) {
   const showAlert = (
     title: string,
     message?: string,
-    buttons: CustomAlertButton[] = [{ text: "حسناً" }],
+    buttons: CustomAlertButton[] = [{ text: t("common.ok") }],
   ) => setAlert({ title, message, buttons });
 
   const closeAlert = () => setAlert(null);
@@ -57,7 +59,7 @@ export function CustomAlertProvider({ children }: { children: ReactNode }) {
         <View className="flex-1 items-center justify-center px-6">
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="إغلاق التنبيه"
+            accessibilityLabel={t("alerts.close")}
             onPress={closeAlert}
             className="absolute inset-0 bg-black/50"
           />

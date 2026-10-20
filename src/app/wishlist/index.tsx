@@ -19,20 +19,21 @@ import {
 import { EmptyState } from "../../components/EmptyState";
 import { WishListItem } from "../../components/WishListItem";
 import { useWishlistStore } from "../../store/wishlistStore";
+import { useTranslation } from "react-i18next";
 
 type WishlistFilter = "all" | "thinking" | "purchased";
 
-const FILTERS: { id: WishlistFilter; label: string }[] = [
-  { id: "all", label: "الكل" },
-  { id: "thinking", label: "قيد التفكير" },
-  { id: "purchased", label: "تم شراؤها" },
-];
-
 export default function WishlistScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { colorScheme } = useColorScheme();
   const items = useWishlistStore((state) => state.items);
   const [filter, setFilter] = useState<WishlistFilter>("all");
+  const filters: { id: WishlistFilter; label: string }[] = [
+    { id: "all", label: t("wishlist.all") },
+    { id: "thinking", label: t("wishlist.thinking") },
+    { id: "purchased", label: t("wishlist.purchased") },
+  ];
 
   const counts = {
     all: items.length,
@@ -60,17 +61,17 @@ export default function WishlistScreen() {
         <View className="mb-6 flex-row-reverse items-center justify-between border-b border-light-border pb-5 pt-4 dark:border-dark-border">
           <View className="flex-1 items-end">
             <Text className="text-xl font-black text-light-text dark:text-dark-text">
-              قائمة الأمنيات
+              {t("wishlist.title")}
             </Text>
             <Text className="mt-1 text-xs font-medium text-light-muted dark:text-dark-muted">
-              راجع مشترياتك وخذ وقتك قبل القرار
+              {t("wishlist.subtitle")}
             </Text>
           </View>
           <TouchableOpacity
             onPress={() => router.back()}
             activeOpacity={0.7}
             accessibilityRole="button"
-            accessibilityLabel="العودة"
+            accessibilityLabel={t("common.back")}
             className="ml-3 h-10 w-10 items-center justify-center rounded-xl border border-light-border bg-light-card dark:border-dark-border dark:bg-dark-card"
           >
             <ArrowLeft
@@ -81,7 +82,7 @@ export default function WishlistScreen() {
         </View>
 
         <View className="mb-5 flex-row-reverse rounded-2xl border border-light-border bg-light-card p-1 dark:border-dark-border dark:bg-dark-card">
-          {FILTERS.map((option) => {
+          {filters.map((option) => {
             const isActive = filter === option.id;
             return (
               <TouchableOpacity
@@ -141,14 +142,16 @@ export default function WishlistScreen() {
           <EmptyState
             icon={<ShoppingBag size={22} color="#10b981" />}
             title={
-              items.length === 0 ? "قائمتك ما زالت فارغة" : "لا توجد منتجات هنا"
+              items.length === 0
+                ? t("wishlist.emptyTitle")
+                : t("wishlist.noProducts")
             }
             message={
               items.length === 0
-                ? "أضف ما تفكر بشرائه، وقارن سعره بوقتك قبل أن تقرر."
+                ? t("wishlist.emptyMessage")
                 : filter === "thinking"
-                  ? "كل المنتجات في قائمتك تم شراؤها. خذ لحظة لتقدير قراراتك."
-                  : "لم تسجل أي منتج كمشتَرى بعد."
+                  ? t("wishlist.allPurchased")
+                  : t("wishlist.nonePurchased")
             }
           />
         ) : (
@@ -156,11 +159,11 @@ export default function WishlistScreen() {
             <View className="mb-3 flex-row-reverse items-center justify-between">
               <Text className="text-sm font-bold text-light-text dark:text-dark-text">
                 {filter === "all"
-                  ? "كل المنتجات"
-                  : FILTERS.find((entry) => entry.id === filter)?.label}
+                  ? t("wishlist.allProducts")
+                  : filters.find((entry) => entry.id === filter)?.label}
               </Text>
               <Text className="text-xs font-semibold text-light-muted dark:text-dark-muted">
-                {filteredItems.length} منتج
+                {t("wishlist.productCount", { count: filteredItems.length })}
               </Text>
             </View>
             {filteredItems.map((item) => (

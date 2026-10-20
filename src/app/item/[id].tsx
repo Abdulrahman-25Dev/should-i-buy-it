@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  Alert,
   ScrollView,
   StatusBar,
   Text,
@@ -22,6 +21,7 @@ import { TimeBreakdown } from "../../components/TimeBreakdown";
 import { calculateTrueCost } from "../../lib/calculations";
 import { useIncomeStore } from "../../store/incomeStore";
 import { useWishlistStore } from "../../store/wishlistStore";
+import { useTranslation } from "react-i18next";
 
 const THINKING_PERIOD_MS = 24 * 60 * 60 * 1000;
 
@@ -40,6 +40,7 @@ function formatDuration(milliseconds: number) {
 }
 
 export default function ItemDetailsScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colorScheme } = useColorScheme();
@@ -94,12 +95,12 @@ export default function ItemDetailsScreen() {
       >
         <View className="mb-6 mt-2 flex-row-reverse items-center justify-between border-b border-light-border pb-4 dark:border-dark-border">
           <Text className="text-lg font-black text-light-text dark:text-dark-text">
-            تفاصيل المنتج
+            {t("item.details")}
           </Text>
           <TouchableOpacity
             onPress={() => router.back()}
             accessibilityRole="button"
-            accessibilityLabel="إغلاق"
+            accessibilityLabel={t("common.close")}
             className="h-10 w-10 items-center justify-center rounded-xl border border-light-border bg-light-card dark:border-dark-border dark:bg-dark-card"
           >
             <X
@@ -113,16 +114,18 @@ export default function ItemDetailsScreen() {
           <View className="items-center rounded-3xl border border-light-border bg-light-card px-6 py-10 dark:border-dark-border dark:bg-dark-card">
             <ShoppingBag size={28} color="#64748b" />
             <Text className="mt-4 text-base font-bold text-light-text dark:text-dark-text">
-              لم نعد نجد هذا المنتج
+              {t("item.missing")}
             </Text>
             <Text className="mt-2 text-center text-sm text-light-muted dark:text-dark-muted">
-              ربما تمت إزالته من قائمة التفكير.
+              {t("item.missingMessage")}
             </Text>
             <TouchableOpacity
               onPress={() => router.back()}
               className="mt-5 rounded-xl bg-emerald-600 px-5 py-3"
             >
-              <Text className="font-bold text-white">العودة للقائمة</Text>
+              <Text className="font-bold text-white">
+                {t("item.backToList")}
+              </Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -139,14 +142,14 @@ export default function ItemDetailsScreen() {
               </Text>
               <View className="my-5 items-center border-y border-light-border py-5 dark:border-dark-border">
                 <Text className="text-xs font-semibold text-light-muted dark:text-dark-muted">
-                  تحتاج أن تعمل لمدة
+                  {t("item.workFor")}
                 </Text>
                 <View className="mt-1 flex-row items-baseline gap-2">
                   <Text className="text-5xl font-black text-light-text dark:text-dark-text">
                     {formatNumber(calculation.hours)}
                   </Text>
                   <Text className="text-sm font-bold text-light-muted dark:text-dark-muted">
-                    ساعة
+                    {t("item.hours")}
                   </Text>
                 </View>
               </View>
@@ -170,14 +173,14 @@ export default function ItemDetailsScreen() {
                 <View className="flex-1 items-end">
                   <Text className="text-sm font-bold text-light-text dark:text-dark-text">
                     {thinkingUntil === null
-                      ? "امنح نفسك وقتاً للتفكير"
+                      ? t("item.startThinking")
                       : remainingTime > 0
-                        ? "وقت التفكير المتبقي"
-                        : "انتهى وقت التفكير"}
+                        ? t("item.remainingThinking")
+                        : t("item.thinkingEnded")}
                   </Text>
                   <Text className="mt-1 text-xs text-light-muted dark:text-dark-muted">
                     {thinkingUntil === null
-                      ? "انتظر 24 ساعة قبل اتخاذ القرار"
+                      ? t("item.wait24Hours")
                       : formatDuration(remainingTime)}
                   </Text>
                 </View>
@@ -192,7 +195,7 @@ export default function ItemDetailsScreen() {
                 >
                   <Clock3 size={16} color="#2563eb" />
                   <Text className="text-sm font-bold text-blue-700 dark:text-blue-300">
-                    ابدأ مهلة التفكير
+                    {t("item.startPeriod")}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -201,7 +204,7 @@ export default function ItemDetailsScreen() {
             {item.isPurchased && (
               <View className="mb-4 rounded-xl bg-emerald-500/10 px-4 py-3">
                 <Text className="text-center text-sm font-bold text-emerald-700 dark:text-emerald-300">
-                  تم تسجيل هذا المنتج كمشتَرى
+                  {t("item.purchased")}
                 </Text>
               </View>
             )}
@@ -214,7 +217,9 @@ export default function ItemDetailsScreen() {
                 className="min-h-12 flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-3 py-3"
               >
                 <CheckCircle2 size={18} color="#ffffff" />
-                <Text className="text-sm font-bold text-white">اشتريه</Text>
+                <Text className="text-sm font-bold text-white">
+                  {t("item.buy")}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleSaveMoney}
@@ -223,7 +228,9 @@ export default function ItemDetailsScreen() {
                 className="min-h-12 flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-blue-700 px-3 py-3"
               >
                 <ArrowDownLeft size={18} color="#ffffff" />
-                <Text className="text-sm font-bold text-white">وفر قيمته</Text>
+                <Text className="text-sm font-bold text-white">
+                  {t("item.savePrice")}
+                </Text>
               </TouchableOpacity>
             </View>
           </>

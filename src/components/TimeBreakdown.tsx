@@ -1,5 +1,6 @@
 import { CalendarDays, Wallet } from "lucide-react-native";
 import { Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface TimeBreakdownProps {
   hours: number;
@@ -20,6 +21,7 @@ export function TimeBreakdown({
   monthlyIncome,
   currency,
 }: TimeBreakdownProps) {
+  const { t } = useTranslation();
   const safeWorkHours = workHoursPerDay > 0 ? workHoursPerDay : 8;
   const days = hours / safeWorkHours;
   const incomePercentage =
@@ -31,7 +33,7 @@ export function TimeBreakdown({
         <View className="w-full flex-row-reverse items-start gap-1.5">
           <CalendarDays size={16} color="#2563eb" />
           <Text className="flex-1 text-right text-[11px] leading-4 font-semibold text-light-muted dark:text-dark-muted">
-            أيام الدوام
+            {t("time.workDays")}
           </Text>
         </View>
         <Text
@@ -39,14 +41,14 @@ export function TimeBreakdown({
           adjustsFontSizeToFit
           className="w-full text-right text-sm font-black text-blue-700 dark:text-blue-400"
         >
-          {formatNumber(days)} يوم
+          {formatNumber(days)} {t("common.day")}
         </Text>
       </View>
       <View className="min-h-24 min-w-0 flex-1 items-end justify-between rounded-2xl border border-light-border bg-light-input p-2.5 dark:border-dark-border dark:bg-dark-input">
         <View className="w-full flex-row-reverse items-start gap-1.5">
           <Wallet size={16} color="#d97706" />
           <Text className="flex-1 text-right text-[11px] leading-4 font-semibold text-light-muted dark:text-dark-muted">
-            من الراتب الشهري
+            {t("time.monthlySalary")}
           </Text>
         </View>
         <Text
@@ -56,10 +58,9 @@ export function TimeBreakdown({
         >
           {monthlyIncome > 0
             ? `${formatNumber(incomePercentage)}%`
-            : "غير محدد"}
+            : t("time.unspecified")}
         </Text>
       </View>
     </View>
   );
 }
- 

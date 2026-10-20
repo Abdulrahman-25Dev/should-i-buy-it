@@ -8,12 +8,14 @@ import {
 } from "../store/wishlistStore";
 import { useIncomeStore } from "../store/incomeStore";
 import { calculateTrueCost } from "../lib/calculations";
+import { useTranslation } from "react-i18next";
 
 interface WishListItemProps {
   item: WishlistItemType;
 }
 
 export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { removeItem, togglePurchased } = useWishlistStore();
   const { currency, hourlyRate } = useIncomeStore();
@@ -41,7 +43,7 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
           {item.isPurchased && (
             <View className="px-2 py-0.5 rounded-md bg-emerald-500/10">
               <Text className="text-[10px] font-bold text-emerald-500">
-                تم الشراء
+                {t("wishlist.purchasedLabel")}
               </Text>
             </View>
           )}
@@ -57,7 +59,7 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
         <View className="flex-row items-center gap-1 bg-emerald-500/10 px-3 py-1.5 rounded-xl">
           <Clock size={12} color="#10b981" />
           <Text className="text-xs font-black text-emerald-400">
-            ~ {hoursNeeded} ساعة
+            ~ {hoursNeeded} {t("common.hours")}
           </Text>
         </View>
 
