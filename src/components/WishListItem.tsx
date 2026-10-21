@@ -8,6 +8,7 @@ import {
 } from "../store/wishlistStore";
 import { useIncomeStore } from "../store/incomeStore";
 import { calculateTrueCost } from "../lib/calculations";
+import { getCurrencyLabel } from "../lib/constants";
 import { useTranslation } from "react-i18next";
 import i18n from "@/i18next/i18n";
 
@@ -24,6 +25,7 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
   const hoursNeeded = calculateTrueCost(item.price, currentHourlyRate).hours;
 
   const isArabic = i18n.language === "ar"; // Assuming you have a translation key for the current language
+  const displayCurrency = getCurrencyLabel(currency, i18n.language);
 
   return (
     <TouchableOpacity
@@ -33,7 +35,9 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
     >
       {/* جهة العنوان والسعر (اليمين) */}
       <View className="flex-1 pl-3">
-        <View className={`${isArabic ? "flex-row-reverse" : "flex-row"} items-center gap-2 mb-1 justify-start`}>
+        <View
+          className={`${isArabic ? "flex-row-reverse" : "flex-row"} items-center gap-2 mb-1 justify-start`}
+        >
           <Text
             className={`text-base font-bold text-right ${
               item.isPurchased
@@ -52,8 +56,10 @@ export const WishListItem: React.FC<WishListItemProps> = ({ item }) => {
           )}
         </View>
 
-        <Text className={`text-xs font-semibold text-light-muted dark:text-dark-muted ${isArabic ? "text-right" : "text-left"}`}>
-          {item.price} {currency}
+        <Text
+          className={`text-xs font-semibold text-light-muted dark:text-dark-muted ${isArabic ? "text-right" : "text-left"}`}
+        >
+          {item.price} {displayCurrency}
         </Text>
       </View>
 

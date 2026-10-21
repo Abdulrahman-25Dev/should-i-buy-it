@@ -17,6 +17,7 @@ import { WishListItem } from "../../components/WishListItem";
 import { CalculatorCard } from "../../components/CalculatorCard";
 import { EmptyState } from "../../components/EmptyState";
 import { Button } from "../../components/ui/Button";
+import { getCurrencyLabel } from "../../lib/constants";
 import I18n from "../../i18next/i18n";
 
 export default function HomeScreen() {
@@ -29,6 +30,7 @@ export default function HomeScreen() {
   const currentHourlyRate = hourlyRate > 0 ? hourlyRate : 50;
 
   const isArabic = I18n.language === "ar";
+  const displayCurrency = getCurrencyLabel(currency, I18n.language);
 
   return (
     <SafeAreaView
@@ -44,13 +46,22 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header Section */}
-        <View className={`${isArabic ? "flex-row-reverse" : "flex-row"} items-center justify-between pt-4 pb-6 border-b border-light-border dark:border-dark-border mb-6`}>
+        <View
+          className={`${isArabic ? "flex-row-reverse" : "flex-row"} items-center justify-between pt-4 pb-6 border-b border-light-border dark:border-dark-border mb-6`}
+        >
           <View className="flex-1">
-            <Text className={`text-xl font-black text-light-text dark:text-dark-text ${isArabic ? "text-right" : "text-left"}`}>
+            <Text
+              className={`text-xl font-black text-light-text dark:text-dark-text ${isArabic ? "text-right" : "text-left"}`}
+            >
               {t("home.appName")}
             </Text>
-            <Text className={`text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5 ${isArabic ? "text-right" : "text-left"}`}>
-              {t("home.hourlyRate", { rate: currentHourlyRate, currency })}
+            <Text
+              className={`text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5 ${isArabic ? "text-right" : "text-left"}`}
+            >
+              {t("home.hourlyRate", {
+                rate: currentHourlyRate,
+                currency: displayCurrency,
+              })}
             </Text>
           </View>
 
@@ -66,8 +77,12 @@ export default function HomeScreen() {
         <CalculatorCard />
 
         {/* Wishlist Header Section */}
-        <View className={`${isArabic ? "flex-row-reverse" : "flex-row"} items-center justify-between mb-4`}>
-          <Text className={`text-base font-bold text-light-text dark:text-dark-text ${isArabic ? "text-right" : "text-left"}`}>
+        <View
+          className={`${isArabic ? "flex-row-reverse" : "flex-row"} items-center justify-between mb-4`}
+        >
+          <Text
+            className={`text-base font-bold text-light-text dark:text-dark-text ${isArabic ? "text-right" : "text-left"}`}
+          >
             {t("home.recentItems")}
           </Text>
 

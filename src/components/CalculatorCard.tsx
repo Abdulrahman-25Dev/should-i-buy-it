@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { BookmarkPlus, CheckCircle2, XCircle } from "lucide-react-native";
 import { calculateTrueCost } from "../lib/calculations";
+import { getCurrencyLabel } from "../lib/constants";
 import { useIncomeStore } from "../store/incomeStore";
 import { useWishlistStore } from "../store/wishlistStore";
 import { CostIndecator } from "./CostIndecator";
@@ -17,10 +18,11 @@ function formatNumber(value: number) {
 }
 
 export function CalculatorCard() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { showAlert } = useCustomAlert();
   const { currency, hourlyRate, monthlyIncome, workHoursPerDay } =
     useIncomeStore();
+  const displayCurrency = getCurrencyLabel(currency, i18n.language);
   const addItem = useWishlistStore((state) => state.addItem);
   const [itemTitle, setItemTitle] = useState("");
   const [priceInput, setPriceInput] = useState("");
@@ -69,7 +71,7 @@ export function CalculatorCard() {
       />
 
       <Input
-        label={t("calculator.productPrice", { currency })}
+        label={t("calculator.productPrice", { currency: displayCurrency })}
         value={priceInput}
         onChangeText={setPriceInput}
         placeholder="0.00"
@@ -99,7 +101,7 @@ export function CalculatorCard() {
               price={safePrice}
               workHoursPerDay={workHoursPerDay}
               monthlyIncome={monthlyIncome}
-              currency={currency}
+              currency={displayCurrency}
             />
           </View>
         )}

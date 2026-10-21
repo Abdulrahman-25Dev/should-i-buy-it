@@ -20,6 +20,7 @@ import {
   useSettingsStore,
 } from "../../store/settingsStore";
 import { useCustomAlert } from "../../components/CustomAlert";
+import { getCurrencyLabel } from "../../lib/constants";
 
 export default function SettingsScreen() {
   const { t } = useTranslation();
@@ -36,6 +37,7 @@ export default function SettingsScreen() {
   const language = useSettingsStore((state) => state.language);
   const setTheme = useSettingsStore((state) => state.setTheme);
   const setLanguage = useSettingsStore((state) => state.setLanguage);
+  const displayCurrency = getCurrencyLabel(currency, language);
 
   // حساب أجر الساعة الحقيقي
   const calculatedHourlyRate = () => {
@@ -91,8 +93,8 @@ export default function SettingsScreen() {
           <Text className="text-xs font-bold text-emerald-700 dark:text-emerald-400 mb-1">
             {t("settings.hourlyRate")}
           </Text>
-          <Text className="text-4xl font-black text-emerald-700 dark:text-emerald-400">
-            {calculatedHourlyRate()} {currency}
+          <Text className="text-2xl font-black text-emerald-700 dark:text-emerald-400">
+            {calculatedHourlyRate()} {displayCurrency}
           </Text>
           <Text className="text-xs text-light-muted dark:text-dark-muted mt-1">
             {t("settings.perWorkHour")}
@@ -233,7 +235,7 @@ export default function SettingsScreen() {
                 {t("settings.monthlyIncome")}
               </Text>
               <Text className="text-xs text-light-muted dark:text-dark-muted mt-0.5">
-                {monthlyIncome || 0} {currency}
+                {monthlyIncome || 0} {displayCurrency}
               </Text>
             </View>
             <View className="p-2.5 rounded-xl bg-emerald-500/10">
@@ -317,7 +319,7 @@ export default function SettingsScreen() {
                 {t("settings.currency")}
               </Text>
               <Text className="text-xs text-light-muted dark:text-dark-muted mt-0.5">
-                {currency}
+                {displayCurrency}
               </Text>
             </View>
             <View className="p-2.5 rounded-xl bg-purple-500/10">

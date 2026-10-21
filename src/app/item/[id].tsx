@@ -19,6 +19,7 @@ import {
 import { CostIndecator } from "../../components/CostIndecator";
 import { TimeBreakdown } from "../../components/TimeBreakdown";
 import { calculateTrueCost } from "../../lib/calculations";
+import { getCurrencyLabel } from "../../lib/constants";
 import { useIncomeStore } from "../../store/incomeStore";
 import { useWishlistStore } from "../../store/wishlistStore";
 import { useTranslation } from "react-i18next";
@@ -62,28 +63,28 @@ export default function ItemDetailsScreen() {
       setRemainingTime(Math.max(0, thinkingUntil - Date.now()));
     };
 
-    
     updateRemainingTime();
     const interval = setInterval(updateRemainingTime, 1000);
     return () => clearInterval(interval);
   }, [thinkingUntil]);
-  
+
   const currentHourlyRate = hourlyRate > 0 ? hourlyRate : 50;
   const calculation = calculateTrueCost(item?.price ?? 0, currentHourlyRate);
-  
+
   const handlePurchase = () => {
     if (!item) return;
     if (!item.isPurchased) togglePurchased(item.id);
     router.back();
   };
-  
+
   const handleSaveMoney = () => {
     if (!item) return;
     setSaved(item.id, true);
     router.back();
   };
-  
+
   const isArabic = i18n.language === "ar"; // Assuming you have a translation key for the current language
+  const displayCurrency = getCurrencyLabel(currency, i18n.language);
   return (
     <SafeAreaView
       className="flex-1 bg-light-bg dark:bg-dark-bg"
@@ -141,7 +142,7 @@ export default function ItemDetailsScreen() {
                 {item.title}
               </Text>
               <Text className="mt-2 text-right text-base font-semibold text-light-muted dark:text-dark-muted">
-                {formatNumber(item.price)} {currency}
+                {formatNumber(item.price)} {displayCurrency}
               </Text>
               <View className="my-5 items-center border-y border-light-border py-5 dark:border-dark-border">
                 <Text className="text-xs font-semibold text-light-muted dark:text-dark-muted">
@@ -161,7 +162,7 @@ export default function ItemDetailsScreen() {
                 price={item.price}
                 workHoursPerDay={workHoursPerDay}
                 monthlyIncome={monthlyIncome}
-                currency={currency}
+                currency={displayCurrency}
               />
               <View className="mt-4">
                 <CostIndecator hours={calculation.hours} />
@@ -173,8 +174,10 @@ export default function ItemDetailsScreen() {
                 <View className="h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10">
                   <Clock3 size={19} color="#2563eb" />
                 </View>
-                <View className={`flex-1 ${isArabic ? "items-end" : "items-start"}`}>
-                  <Text className="text-sm font-bold text-light-text dark:text-dark-text"> 
+                <View
+                  className={`flex-1 ${isArabic ? "items-end" : "items-start"}`}
+                >
+                  <Text className="text-sm font-bold text-light-text dark:text-dark-text">
                     {thinkingUntil === null
                       ? t("item.startThinking")
                       : remainingTime > 0
