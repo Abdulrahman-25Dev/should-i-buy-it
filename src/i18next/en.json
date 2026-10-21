@@ -14,7 +14,8 @@
     "days": "days",
     "emptyTitle": "Nothing here yet",
     "day": "day",
-    "hour": "hour"
+    "hour": "hour",
+    "continue": "Continue"
   },
   "tabs": {
     "calculator": "Calculator",
@@ -27,6 +28,39 @@
     "recentItems": "Recently considered",
     "viewAll": "View all",
     "emptyMessage": "Add a product to see how many hours of your time it costs."
+  },
+  "onboarding": {
+    "progress": "Step {{current}} of {{total}}",
+    "welcome": {
+      "badge": "Your time comes first",
+      "title": "Is it worth your time?",
+      "description": "Worth It? turns any product's price into work hours, so you can see its real cost before deciding.",
+      "insightTitle": "Every price represents your time",
+      "insightDescription": "Set your income and work hours once, then make clearer buying decisions.",
+      "start": "Get started"
+    },
+    "method": {
+      "title": "How should we calculate your rate?",
+      "description": "Choose the method that fits your finances. You can change it later in settings.",
+      "monthlyTitle": "Calculate it from monthly income",
+      "monthlyDescription": "Enter your net income and work schedule, and we will calculate your hourly rate.",
+      "hourlyTitle": "Enter my hourly rate",
+      "hourlyDescription": "If you already know your rate per work hour, enter it directly."
+    },
+    "amount": {
+      "monthlyTitle": "Enter your work details",
+      "hourlyTitle": "What is your hourly rate?",
+      "description": "Your hourly rate updates immediately as you enter each value.",
+      "monthlyIncome": "Net monthly income",
+      "dailyHours": "Work hours per day",
+      "weeklyDays": "Workdays per week",
+      "hourlyRate": "Hourly rate",
+      "previewTitle": "Calculated hourly rate",
+      "perHour": "per work hour",
+      "monthlyBasis": "Based on about {{hours}} work hours per month.",
+      "validation": "Enter valid values above zero, up to 24 hours per day and 7 workdays per week.",
+      "confirm": "Confirm and continue"
+    }
   },
   "calculator": {
     "productName": "Product name",

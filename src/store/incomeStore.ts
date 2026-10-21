@@ -1,8 +1,9 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { zustandStorage } from '../lib/storage';
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { zustandStorage } from "../lib/storage";
 
 interface IncomeState {
+  onboardingCompleted: boolean;
   monthlyIncome: number;
   workHoursPerDay: number;
   workDaysPerWeek: number;
@@ -14,21 +15,26 @@ interface IncomeState {
   setWorkDaysPerWeek: (days: number) => void;
   setHourlyRate: (rate: number) => void;
   setCurrency: (currency: string) => void;
+  completeOnboarding: () => void;
 }
 
 export const useIncomeStore = create<IncomeState>()(
   persist(
     (set, get) => ({
+      onboardingCompleted: false,
       monthlyIncome: 0,
       workHoursPerDay: 8,
       workDaysPerWeek: 5,
       hourlyRate: 50,
-      currency: 'SAR',
+      currency: "SAR",
 
       setMonthlyIncome: (income: number) => {
         const { workHoursPerDay, workDaysPerWeek } = get();
         const monthlyHours = workHoursPerDay * workDaysPerWeek * 4.33;
-        const calculatedRate = monthlyHours > 0 ? Math.round((income / monthlyHours) * 100) / 100 : 0;
+        const calculatedRate =
+          monthlyHours > 0
+            ? Math.round((income / monthlyHours) * 100) / 100
+            : 0;
 
         set({
           monthlyIncome: income,
@@ -41,7 +47,10 @@ export const useIncomeStore = create<IncomeState>()(
         const { monthlyIncome, workDaysPerWeek } = get();
         if (monthlyIncome > 0) {
           const monthlyHours = hours * workDaysPerWeek * 4.33;
-          const calculatedRate = monthlyHours > 0 ? Math.round((monthlyIncome / monthlyHours) * 100) / 100 : 0;
+          const calculatedRate =
+            monthlyHours > 0
+              ? Math.round((monthlyIncome / monthlyHours) * 100) / 100
+              : 0;
           set({ hourlyRate: calculatedRate });
         }
       },
@@ -51,17 +60,21 @@ export const useIncomeStore = create<IncomeState>()(
         const { monthlyIncome, workHoursPerDay } = get();
         if (monthlyIncome > 0) {
           const monthlyHours = workHoursPerDay * days * 4.33;
-          const calculatedRate = monthlyHours > 0 ? Math.round((monthlyIncome / monthlyHours) * 100) / 100 : 0;
+          const calculatedRate =
+            monthlyHours > 0
+              ? Math.round((monthlyIncome / monthlyHours) * 100) / 100
+              : 0;
           set({ hourlyRate: calculatedRate });
         }
       },
 
       setHourlyRate: (rate: number) => set({ hourlyRate: rate }),
       setCurrency: (currency: string) => set({ currency }),
+      completeOnboarding: () => set({ onboardingCompleted: true }),
     }),
     {
-      name: 'income-storage',
+      name: "income-storage",
       storage: createJSONStorage(() => zustandStorage),
-    }
-  )
+    },
+  ),
 );
