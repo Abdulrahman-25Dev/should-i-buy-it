@@ -1,9 +1,11 @@
 // src/app/_layout.tsx
 import "./global.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { router, Stack, useSegments } from "expo-router";
 import { useColorScheme } from "nativewind";
+import { View } from "react-native";
 import { CustomAlertProvider } from "../components/CustomAlert";
+import CustomSplash from "../components/CustomSplash";
 import i18n from "../i18next/i18n";
 import { useIncomeStore } from "../store/incomeStore";
 import { useSettingsStore } from "../store/settingsStore";
@@ -20,6 +22,10 @@ export default function RootLayout() {
   const [incomeHydrated, setIncomeHydrated] = useState(
     useIncomeStore.persist.hasHydrated(),
   );
+  const [isSplashVisible, setIsSplashVisible] = useState(
+    !useIncomeStore.persist.hasHydrated(),
+  );
+  const hideSplash = useCallback(() => setIsSplashVisible(false), []);
 
   useEffect(() => {
     if (incomeHydrated) return;
@@ -53,16 +59,26 @@ export default function RootLayout() {
     }
   }, [incomeHydrated, onboardingCompleted, segments]);
 
-  if (!incomeHydrated) return null;
-
   return (
     <SafeAreaProvider>
       <CustomAlertProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="onboarding" />
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="item/[id]" options={{ presentation: "modal" }} />
-        </Stack>
+        <View className="flex-1">
+          {incomeHydrated ? (
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="onboarding" />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen
+                name="item/[id]"
+                options={{ presentation: "modal" }}
+              />
+            </Stack>
+          ) : null}
+          {isSplashVisible ? (
+            <View className="absolute inset-0 z-50">
+              <CustomSplash isReady={incomeHydrated} onReady={hideSplash} />
+            </View>
+          ) : null}
+        </View>
       </CustomAlertProvider>
     </SafeAreaProvider>
   );
