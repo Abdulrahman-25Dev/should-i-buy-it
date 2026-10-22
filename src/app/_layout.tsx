@@ -22,9 +22,7 @@ export default function RootLayout() {
   const [incomeHydrated, setIncomeHydrated] = useState(
     useIncomeStore.persist.hasHydrated(),
   );
-  const [isSplashVisible, setIsSplashVisible] = useState(
-    !useIncomeStore.persist.hasHydrated(),
-  );
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
   const hideSplash = useCallback(() => setIsSplashVisible(false), []);
 
   useEffect(() => {

@@ -1,27 +1,44 @@
 import { useEffect, useRef, useState } from "react";
-import { Animated, StatusBar, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Animated,
+  StatusBar,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useColorScheme } from "nativewind";
 import { useTranslation } from "react-i18next";
-import { Clock3, Coins, Sparkles } from "lucide-react-native";
+import { ArrowUpRight, Clock3 } from "lucide-react-native";
 
 export interface CustomSplashProps {
   isReady?: boolean;
   onReady?: () => void;
+  onFinish?: () => void;
 }
 
 export default function CustomSplash({
-  isReady = false,
+  isReady = true,
   onReady,
+  onFinish,
 }: CustomSplashProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { colorScheme } = useColorScheme();
   const [isVisible, setIsVisible] = useState(true);
+  const [hasMinimumDurationElapsed, setHasMinimumDurationElapsed] =
+    useState(false);
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const logoScale = useRef(new Animated.Value(0.88)).current;
   const copyOpacity = useRef(new Animated.Value(0)).current;
   const copyTranslateY = useRef(new Animated.Value(10)).current;
   const screenOpacity = useRef(new Animated.Value(1)).current;
+  const hasStartedExit = useRef(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setHasMinimumDurationElapsed(true), 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     Animated.sequence([
@@ -54,7 +71,16 @@ export default function CustomSplash({
   }, [copyOpacity, copyTranslateY, logoOpacity, logoScale]);
 
   useEffect(() => {
-    if (!isReady || !isVisible) return;
+    if (
+      !isReady ||
+      !hasMinimumDurationElapsed ||
+      !isVisible ||
+      hasStartedExit.current
+    ) {
+      return;
+    }
+
+    hasStartedExit.current = true;
 
     Animated.timing(screenOpacity, {
       toValue: 0,
@@ -64,12 +90,21 @@ export default function CustomSplash({
       if (!finished) return;
 
       setIsVisible(false);
+      onFinish?.();
       onReady?.();
     });
-  }, [isReady, isVisible, onReady, screenOpacity]);
+  }, [
+    hasMinimumDurationElapsed,
+    isReady,
+    isVisible,
+    onFinish,
+    onReady,
+    screenOpacity,
+  ]);
 
   if (!isVisible) return null;
 
+  const isArabic = i18n.resolvedLanguage?.startsWith("ar") ?? false;
   const isDarkMode = colorScheme === "dark";
 
   return (
@@ -78,29 +113,20 @@ export default function CustomSplash({
         className="flex-1 items-center justify-center bg-light-bg px-8 dark:bg-dark-bg"
         edges={["top", "bottom", "left", "right"]}
       >
-        <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-
-        <View className="absolute left-8 top-1/4 h-2 w-2 rounded-full bg-emerald-500/60" />
-        <View className="absolute bottom-1/4 right-10 h-3 w-3 rounded-full bg-amber-400/70" />
+        <StatusBar
+          barStyle={isDarkMode ? "light-content" : "dark-content"}
+          backgroundColor={isDarkMode ? "#0f172a" : "#f8fafc"}
+        />
 
         <Animated.View
           accessibilityLabel={t("home.appName")}
-          className="mb-9 h-36 w-36 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 dark:border-emerald-500/30 dark:bg-emerald-500/10"
+          className="mb-9 h-36 w-36 items-center justify-center rounded-full border border-amber-300/20 bg-amber-400/10"
           style={{ opacity: logoOpacity, transform: [{ scale: logoScale }] }}
         >
-          <View className="h-24 w-24 items-center justify-center rounded-full bg-emerald-600 shadow-lg shadow-emerald-900/20">
-            <Clock3 size={43} color="#ffffff" strokeWidth={1.8} />
+          <Clock3 size={62} color="#fbbf24" strokeWidth={1.7} />
+          <View className="absolute right-7 top-7 h-10 w-10 items-center justify-center rounded-full border-4 border-light-bg bg-amber-400 dark:border-dark-bg">
+            <ArrowUpRight size={22} color="#422006" strokeWidth={2.7} />
           </View>
-          <View className="absolute -right-1 bottom-2 h-11 w-11 items-center justify-center rounded-full border-4 border-light-bg bg-amber-400 dark:border-dark-bg">
-            <Coins size={21} color="#422006" strokeWidth={2} />
-          </View>
-          <Sparkles
-            accessibilityElementsHidden
-            importantForAccessibility="no"
-            size={17}
-            color={isDarkMode ? "#6ee7b7" : "#059669"}
-            style={{ position: "absolute", top: 12, right: 15 }}
-          />
         </Animated.View>
 
         <Animated.View
@@ -111,19 +137,21 @@ export default function CustomSplash({
           }}
         >
           <Text className="mb-3 text-center text-4xl font-black text-light-text dark:text-dark-text">
-            {t("home.appName")}
+            {isArabic ? "تستاهل؟" : "Worth It?"}
           </Text>
           <Text className="max-w-sm text-center text-base font-medium leading-7 text-light-muted dark:text-dark-muted">
-            {t("onboarding.welcome.description")}
+            {isArabic
+              ? "احسب تكلفتك بالوقت، واعرف إذا كان يستاهل."
+              : "Calculate the cost in time and decide if it is worth it."}
           </Text>
         </Animated.View>
 
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
-          className="absolute bottom-12 h-1 w-16 overflow-hidden rounded-full bg-light-border dark:bg-dark-border"
+          className="absolute bottom-12"
         >
-          <View className="h-full w-2/3 rounded-full bg-emerald-600" />
+          <ActivityIndicator size="small" color="#fbbf24" />
         </View>
       </SafeAreaView>
     </Animated.View>

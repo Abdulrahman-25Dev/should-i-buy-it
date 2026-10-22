@@ -27,6 +27,17 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#f8fafc",
+          "image": "./assets/images/lightSplash.png",
+          "dark": {
+            "backgroundColor": "#0f172a",
+            "image": "./assets/images/darkSplash.png"
+          }
+        }
+      ],
       "expo-localization"
     ],
     "experiments": {
