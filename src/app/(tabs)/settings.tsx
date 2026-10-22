@@ -159,7 +159,7 @@ export default function SettingsScreen() {
           </View>
 
           {/* Language Selection */}
-          <View className="border-t border-light-border pt-4 dark:border-dark-border">
+          <View className="border-light-border pt-4 dark:border-dark-border">
             <View
               className={`mb-3 flex-row items-center gap-2 ${isArabic ? "justify-end" : "justify-start"}`}
             >
