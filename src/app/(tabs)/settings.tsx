@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,13 @@ import {
   useSettingsStore,
 } from "../../store/settingsStore";
 import { useCustomAlert } from "../../components/CustomAlert";
-import { getCurrencyLabel } from "../../lib/constants";
+import {
+  ProfileEditModal,
+  type ProfileOption,
+} from "../../components/ProfileEditModal";
+import { CURRENCIES, getCurrencyLabel } from "../../lib/constants";
+
+type EditableProfileField = "income" | "hours" | "days" | "currency";
 
 export default function SettingsScreen() {
   const { t } = useTranslation();
@@ -31,6 +37,9 @@ export default function SettingsScreen() {
     workDaysPerWeek,
     currency,
     setMonthlyIncome,
+    setWorkHoursPerDay,
+    setWorkDaysPerWeek,
+    setCurrency,
   } = useIncomeStore();
 
   const theme = useSettingsStore((state) => state.theme);
@@ -38,6 +47,10 @@ export default function SettingsScreen() {
   const setTheme = useSettingsStore((state) => state.setTheme);
   const setLanguage = useSettingsStore((state) => state.setLanguage);
   const displayCurrency = getCurrencyLabel(currency, language);
+  const [editingField, setEditingField] =
+    useState<EditableProfileField | null>(null);
+  const [editValue, setEditValue] = useState("");
+  const [editError, setEditError] = useState("");
 
   // حساب أجر الساعة الحقيقي
   const calculatedHourlyRate = () => {
@@ -64,6 +77,76 @@ export default function SettingsScreen() {
   };
 
   const isArabic = language === "ar"; // Assuming you have a translation key for the current language
+
+  const openProfileEditor = (
+    field: EditableProfileField,
+    value: string | number,
+  ) => {
+    setEditingField(field);
+    setEditValue(String(value));
+    setEditError("");
+  };
+
+  const closeProfileEditor = () => {
+    setEditingField(null);
+    setEditError("");
+  };
+
+  const saveProfileValue = () => {
+    if (!editingField) return;
+
+    if (editingField === "currency") {
+      setCurrency(editValue);
+      closeProfileEditor();
+      return;
+    }
+
+    const parsedValue = Number(editValue);
+    if (!editValue.trim() || !Number.isFinite(parsedValue)) {
+      setEditError(t("settings.invalidNumber"));
+      return;
+    }
+
+    if (editingField === "income") {
+      if (parsedValue < 0) {
+        setEditError(t("settings.invalidNumber"));
+        return;
+      }
+      setMonthlyIncome(parsedValue);
+    } else if (editingField === "hours") {
+      if (parsedValue <= 0 || parsedValue > 24) {
+        setEditError(t("settings.invalidHours"));
+        return;
+      }
+      setWorkHoursPerDay(parsedValue);
+    } else {
+      if (!Number.isInteger(parsedValue) || parsedValue < 1 || parsedValue > 7) {
+        setEditError(t("settings.invalidDays"));
+        return;
+      }
+      setWorkDaysPerWeek(parsedValue);
+    }
+
+    closeProfileEditor();
+  };
+
+  const profileOptions: ProfileOption[] = CURRENCIES.map((option) => ({
+    label: isArabic ? option.label : option.value,
+    value: option.value,
+  }));
+  const editorTitle = editingField
+    ? t(
+        `settings.${
+          editingField === "income"
+            ? "monthlyIncome"
+            : editingField === "hours"
+              ? "dailyHours"
+              : editingField === "days"
+                ? "weeklyDays"
+                : "currency"
+        }`,
+      )
+    : "";
 
   return (
     <SafeAreaView
@@ -207,7 +290,7 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        {/* Section 1: Financial Profile Cards (Prepped for BottomSheet) */}
+        {/* Financial profile */}
         <Text
           className={`text-sm font-bold text-light-muted dark:text-dark-muted mb-3 ${isArabic ? "text-right" : "text-left"}`}
         >
@@ -218,9 +301,7 @@ export default function SettingsScreen() {
           {/* الدخل الشهري الصافي */}
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() =>
-              showAlert(t("common.alert"), t("settings.bottomSheetNotice"))
-            }
+            onPress={() => openProfileEditor("income", monthlyIncome)}
             className={` ${isArabic ? "flex-row" : "flex-row-reverse"} p-4 items-center justify-between border-b border-light-border dark:border-dark-border`}
           >
             {isArabic ? (
@@ -246,9 +327,7 @@ export default function SettingsScreen() {
           {/* ساعات العمل اليومية */}
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() =>
-              showAlert(t("common.alert"), t("settings.bottomSheetNotice"))
-            }
+            onPress={() => openProfileEditor("hours", workHoursPerDay)}
             className={` ${isArabic ? "flex-row" : "flex-row-reverse"} p-4 items-center justify-between border-b border-light-border dark:border-dark-border`}
           >
             {isArabic ? (
@@ -274,9 +353,7 @@ export default function SettingsScreen() {
           {/* أيام العمل في الأسبوع */}
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() =>
-              showAlert(t("common.alert"), t("settings.bottomSheetNotice"))
-            }
+            onPress={() => openProfileEditor("days", workDaysPerWeek)}
             className={` ${isArabic ? "flex-row" : "flex-row-reverse"} p-4 items-center justify-between border-b border-light-border dark:border-dark-border`}
           >
             {isArabic ? (
@@ -302,9 +379,7 @@ export default function SettingsScreen() {
           {/* العملة المفضلة */}
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() =>
-              showAlert(t("common.alert"), t("settings.bottomSheetNotice"))
-            }
+            onPress={() => openProfileEditor("currency", currency)}
             className={` ${isArabic ? "flex-row" : "flex-row-reverse"} p-4 items-center justify-between`}
           >
             {isArabic ? (
@@ -347,6 +422,21 @@ export default function SettingsScreen() {
           </Text>
         </View>
       </ScrollView>
+      <ProfileEditModal
+        visible={editingField !== null}
+        title={editorTitle}
+        value={editValue}
+        isArabic={isArabic}
+        options={editingField === "currency" ? profileOptions : undefined}
+        error={editError}
+        keyboardType={editingField === "days" ? "number-pad" : "decimal-pad"}
+        onChangeValue={(value) => {
+          setEditValue(value);
+          setEditError("");
+        }}
+        onSave={saveProfileValue}
+        onClose={closeProfileEditor}
+      />
     </SafeAreaView>
   );
 }

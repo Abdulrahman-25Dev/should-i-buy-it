@@ -1,6 +1,7 @@
 {
   "common": {
     "cancel": "Cancel",
+    "save": "Save",
     "confirm": "Confirm",
     "done": "Done",
     "ok": "OK",
@@ -124,7 +125,9 @@
     "weeklyDays": "Workdays per week",
     "daysPerWeek": "{{count}} days/week",
     "currency": "Preferred currency",
-    "bottomSheetNotice": "Editing these values with a bottom sheet will be available soon.",
+    "invalidNumber": "Enter a valid number greater than or equal to zero.",
+    "invalidHours": "Enter a number of hours greater than zero and no more than 24.",
+    "invalidDays": "Enter a whole number of days from 1 to 7.",
     "reset": "Reset app and clear data",
     "resetTitle": "Clear data",
     "resetConfirm": "Are you sure you want to clear all local settings and data?",
